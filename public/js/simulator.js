@@ -39,30 +39,40 @@ let simulationResults = [];
 let distributionChart = null;
 let percentileChart = null;
 
-/**
- * Generate a random bingo board
- */
-function generateBoard(size, minNum, maxNum) {
-    const board = [];
+function shuffleInPlace(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+}
+
+/** Same multiset of numbers for every board in a game (matches server logic). */
+function createSharedNumberPool(slotCount, minNum, maxNum) {
     const range = maxNum - minNum + 1;
-    const usedNumbers = new Set();
-    
+    const bag = Array.from({ length: range }, (_, i) => minNum + i);
+    shuffleInPlace(bag);
+    const pool = bag.slice(0, Math.min(slotCount, range));
+    while (pool.length < slotCount) {
+        pool.push(Math.floor(Math.random() * range) + minNum);
+    }
+    return pool;
+}
+
+function buildBoardFromPool(size, numberPool) {
+    const shuffled = [...numberPool];
+    shuffleInPlace(shuffled);
+    const board = [];
+    const hasFree = size % 2 === 1;
+    const cr = Math.floor(size / 2);
+    const cc = Math.floor(size / 2);
+    let k = 0;
     for (let row = 0; row < size; row++) {
         const rowNumbers = [];
         for (let col = 0; col < size; col++) {
-            // Free space in center for odd-sized boards
-            if (size % 2 === 1 && row === Math.floor(size / 2) && col === Math.floor(size / 2)) {
+            if (hasFree && row === cr && col === cc) {
                 rowNumbers.push({ number: 'FREE', stamped: true });
             } else {
-                let num;
-                let attempts = 0;
-                do {
-                    num = Math.floor(Math.random() * range) + minNum;
-                    attempts++;
-                    if (attempts > range * 2) break;
-                } while (usedNumbers.has(num) && usedNumbers.size < range);
-                usedNumbers.add(num);
-                rowNumbers.push({ number: num, stamped: false });
+                rowNumbers.push({ number: shuffled[k++], stamped: false });
             }
         }
         board.push(rowNumbers);
@@ -146,10 +156,11 @@ function checkWin(board, winType) {
  * Run a single simulation
  */
 function runSingleSimulation(boardSize, boardCount, minNum, maxNum, winType) {
-    // Generate boards
+    const slotCount = boardSize * boardSize - (boardSize % 2 === 1 ? 1 : 0);
+    const sharedPool = createSharedNumberPool(slotCount, minNum, maxNum);
     const boards = [];
     for (let i = 0; i < boardCount; i++) {
-        boards.push(generateBoard(boardSize, minNum, maxNum));
+        boards.push(buildBoardFromPool(boardSize, sharedPool));
     }
     
     // Generate all possible numbers
