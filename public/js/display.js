@@ -140,16 +140,19 @@ function createBoardElement(board, boardIndex, cellSize, previousState) {
     
     boardDiv.appendChild(grid);
     
-    // Add winner overlay if applicable
     if (isWinner) {
-        const overlay = document.createElement('div');
-        overlay.className = 'winner-overlay';
-        overlay.innerHTML = `
+        const banner = document.createElement('div');
+        banner.className = 'winner-banner-above';
+        banner.innerHTML = `
             <div class="winner-content">
                 <div class="winner-text">🎉 WINNER! 🎉</div>
             </div>
         `;
-        boardDiv.appendChild(overlay);
+        const wrap = document.createElement('div');
+        wrap.className = 'bingo-board-wrap bingo-board-wrap--winner';
+        wrap.appendChild(banner);
+        wrap.appendChild(boardDiv);
+        return wrap;
     }
     
     return boardDiv;
