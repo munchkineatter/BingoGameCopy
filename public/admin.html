@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino Bingo - Admin Control</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="admin-page">
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="admin-header">
+            <h1>🎮 BINGO CONTROL PANEL</h1>
+            <div class="connection-status" id="connectionStatus">
+                <span class="status-dot"></span>
+                <span class="status-text">Connecting...</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="admin-main">
+            <!-- Game Settings Panel -->
+            <section class="admin-panel settings-panel">
+                <h2>⚙️ Game Settings</h2>
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <label for="boardCount">Number of Boards:</label>
+                        <select id="boardCount">
+                            <option value="1">1 Board</option>
+                            <option value="2" selected>2 Boards</option>
+                            <option value="3">3 Boards</option>
+                            <option value="4">4 Boards</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="boardSize">Board Size:</label>
+                        <select id="boardSize">
+                            <option value="3">3 x 3</option>
+                            <option value="4">4 x 4</option>
+                            <option value="5" selected>5 x 5 (Standard)</option>
+                            <option value="6">6 x 6</option>
+                            <option value="7">7 x 7</option>
+                            <option value="8">8 x 8</option>
+                            <option value="9">9 x 9</option>
+                            <option value="10">10 x 10</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="numberRangeMin">Number Range (Min):</label>
+                        <input type="number" id="numberRangeMin" value="1" min="1" max="999">
+                    </div>
+                    <div class="setting-group">
+                        <label for="numberRangeMax">Number Range (Max):</label>
+                        <input type="number" id="numberRangeMax" value="75" min="1" max="999">
+                    </div>
+                    <div class="setting-group full-width">
+                        <label for="winCondition">Win Condition:</label>
+                        <select id="winCondition">
+                            <option value="any">Any Line (Row, Column, or Diagonal)</option>
+                            <option value="row">Row Only</option>
+                            <option value="column">Column Only</option>
+                            <option value="diagonal">Diagonal Only</option>
+                            <option value="blackout">Blackout (Full Card)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="range-info" id="rangeInfo">
+                    Numbers will be between <strong>1</strong> and <strong>75</strong>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" id="newGameBtn">🎲 NEW GAME</button>
+                </div>
+            </section>
+
+            <!-- Number Caller Panel -->
+            <section class="admin-panel caller-panel">
+                <h2>📢 Call Numbers</h2>
+                <div class="number-input-section">
+                    <input type="number" 
+                           id="numberInput" 
+                           placeholder="Enter number..." 
+                           min="1" 
+                           max="999"
+                           autocomplete="off">
+                    <button class="btn btn-call" id="callBtn">CALL</button>
+                </div>
+                <div class="quick-actions">
+                    <button class="btn btn-undo" id="undoBtn">↩️ UNDO LAST</button>
+                </div>
+                <div class="last-called-admin">
+                    <span>Last Called: </span>
+                    <strong id="lastCalledAdmin">--</strong>
+                </div>
+            </section>
+
+            <!-- Called Numbers History -->
+            <section class="admin-panel history-panel">
+                <h2>📋 Called Numbers (<span id="calledCount">0</span>)</h2>
+                <div class="called-history" id="calledHistory">
+                    <p class="no-numbers">No numbers called yet</p>
+                </div>
+            </section>
+
+            <!-- Current Boards Preview -->
+            <section class="admin-panel preview-panel">
+                <h2>👁️ Board Preview</h2>
+                <div class="boards-preview" id="boardsPreview">
+                    <!-- Mini board previews -->
+                </div>
+            </section>
+
+            <!-- Display Size Control -->
+            <section class="admin-panel display-control-panel">
+                <h2>📺 Display Size</h2>
+                <div class="display-scale-control">
+                    <button class="btn btn-scale" id="scaleDownBtn">➖</button>
+                    <div class="scale-display">
+                        <span id="scaleValue">100</span>%
+                    </div>
+                    <button class="btn btn-scale" id="scaleUpBtn">➕</button>
+                </div>
+                <div class="scale-slider-container">
+                    <input type="range" id="scaleSlider" min="50" max="200" value="100" step="5">
+                </div>
+                <p class="scale-hint">Adjust to fill your display screen</p>
+            </section>
+
+            <!-- Tools Panel -->
+            <section class="admin-panel tools-panel">
+                <h2>🛠️ Tools</h2>
+                <div class="tools-grid">
+                    <a href="/simulator.html" class="tool-link">
+                        <div class="tool-icon">📊</div>
+                        <div class="tool-info">
+                            <div class="tool-name">Simulation Tool</div>
+                            <div class="tool-desc">Run simulations to analyze odds and collect data</div>
+                        </div>
+                    </a>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="admin-footer">
+            <p>Open <a href="/display.html" target="_blank">/display.html</a> on your display screen</p>
+        </footer>
+    </div>
+
+    <!-- Confirmation Modal -->
+    <div class="modal" id="confirmModal">
+        <div class="modal-content">
+            <h3 id="modalTitle">Confirm Action</h3>
+            <p id="modalMessage">Are you sure?</p>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" id="modalCancel">Cancel</button>
+                <button class="btn btn-primary" id="modalConfirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/admin.js"></script>
+</body>
+</html>
+

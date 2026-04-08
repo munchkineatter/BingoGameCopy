@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino Bingo - Display</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="display-page">
+    <div class="display-container">
+        <!-- Main Content -->
+        <main class="display-main">
+            <!-- Bingo Boards Container -->
+            <div class="boards-container" id="boardsContainer">
+                <!-- Boards will be dynamically generated -->
+            </div>
+
+            <!-- Called Numbers Board -->
+            <div class="called-numbers-section">
+                <h2>CALLED NUMBERS</h2>
+                <div class="last-called-display">
+                    <span class="label">LAST CALLED:</span>
+                    <span class="number" id="lastCalledNumber">--</span>
+                </div>
+                <div class="called-numbers-grid" id="calledNumbersGrid">
+                    <!-- Called numbers will be displayed here -->
+                </div>
+                <div class="total-called">
+                    <span id="totalCalled">0</span> numbers called
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Winner Overlay Template -->
+    <div class="winner-overlay" id="winnerOverlayTemplate" style="display: none;">
+        <div class="winner-content">
+            <div class="winner-text">🎉 WINNER! 🎉</div>
+            <div class="winner-confetti"></div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/display.js"></script>
+</body>
+</html>
+

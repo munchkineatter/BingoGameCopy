@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Casino Bingo - Simulation Tool</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&family=Oswald:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="admin-page simulator-page">
+    <div class="admin-container">
+        <!-- Header -->
+        <header class="admin-header">
+            <h1>📊 BINGO SIMULATION TOOL</h1>
+            <a href="/admin.html" class="btn btn-secondary">← Back to Admin</a>
+        </header>
+
+        <!-- Main Content -->
+        <main class="simulator-main">
+            <!-- Simulation Settings -->
+            <section class="admin-panel sim-settings-panel">
+                <h2>⚙️ Simulation Settings</h2>
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <label for="simBoardSize">Board Size:</label>
+                        <select id="simBoardSize">
+                            <option value="3">3 x 3</option>
+                            <option value="4">4 x 4</option>
+                            <option value="5" selected>5 x 5 (Standard)</option>
+                            <option value="6">6 x 6</option>
+                            <option value="7">7 x 7</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="simBoardCount">Boards per Game:</label>
+                        <select id="simBoardCount">
+                            <option value="1">1 Board</option>
+                            <option value="2" selected>2 Boards</option>
+                            <option value="3">3 Boards</option>
+                            <option value="4">4 Boards</option>
+                        </select>
+                    </div>
+                    <div class="setting-group">
+                        <label for="simRangeMin">Number Range (Min):</label>
+                        <input type="number" id="simRangeMin" value="1" min="1">
+                    </div>
+                    <div class="setting-group">
+                        <label for="simRangeMax">Number Range (Max):</label>
+                        <input type="number" id="simRangeMax" value="75" min="1">
+                    </div>
+                    <div class="setting-group">
+                        <label for="simCount">Number of Simulations:</label>
+                        <input type="number" id="simCount" value="1000" min="1" max="100000">
+                    </div>
+                    <div class="setting-group">
+                        <label for="simWinType">Win Condition:</label>
+                        <select id="simWinType">
+                            <option value="any">Any Line (Row/Col/Diag)</option>
+                            <option value="row">Row Only</option>
+                            <option value="column">Column Only</option>
+                            <option value="diagonal">Diagonal Only</option>
+                            <option value="blackout">Full Blackout</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button class="btn btn-primary" id="runSimBtn">🎲 RUN SIMULATION</button>
+                    <button class="btn btn-secondary" id="stopSimBtn" disabled>⏹️ STOP</button>
+                </div>
+            </section>
+
+            <!-- Progress -->
+            <section class="admin-panel progress-panel">
+                <h2>📈 Progress</h2>
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text">
+                        <span id="progressText">0 / 0</span>
+                        <span id="progressPercent">0%</span>
+                    </div>
+                </div>
+                <div class="sim-status" id="simStatus">Ready to simulate</div>
+            </section>
+
+            <!-- Results Summary -->
+            <section class="admin-panel results-panel">
+                <h2>📋 Results Summary</h2>
+                <div class="results-grid" id="resultsGrid">
+                    <div class="result-card">
+                        <div class="result-label">Average Draws to Win</div>
+                        <div class="result-value" id="avgDraws">--</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Minimum Draws</div>
+                        <div class="result-value" id="minDraws">--</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Maximum Draws</div>
+                        <div class="result-value" id="maxDraws">--</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Median Draws</div>
+                        <div class="result-value" id="medianDraws">--</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Standard Deviation</div>
+                        <div class="result-value" id="stdDev">--</div>
+                    </div>
+                    <div class="result-card">
+                        <div class="result-label">Games Simulated</div>
+                        <div class="result-value" id="totalGames">--</div>
+                    </div>
+                </div>
+                <div class="button-group" style="margin-top: 20px;">
+                    <button class="btn btn-primary" id="exportBtn" disabled>📥 EXPORT TO CSV</button>
+                    <button class="btn btn-secondary" id="clearBtn">🗑️ CLEAR DATA</button>
+                </div>
+            </section>
+
+            <!-- Distribution Chart -->
+            <section class="admin-panel chart-panel">
+                <h2>📊 Distribution Chart</h2>
+                <div class="chart-container">
+                    <canvas id="distributionChart"></canvas>
+                </div>
+            </section>
+
+            <!-- Percentile Chart -->
+            <section class="admin-panel chart-panel">
+                <h2>📉 Cumulative Probability</h2>
+                <div class="chart-container">
+                    <canvas id="percentileChart"></canvas>
+                </div>
+                <div class="percentile-info">
+                    <div class="percentile-item">
+                        <span class="percentile-label">25% of games win by:</span>
+                        <span class="percentile-value" id="p25">--</span> draws
+                    </div>
+                    <div class="percentile-item">
+                        <span class="percentile-label">50% of games win by:</span>
+                        <span class="percentile-value" id="p50">--</span> draws
+                    </div>
+                    <div class="percentile-item">
+                        <span class="percentile-label">75% of games win by:</span>
+                        <span class="percentile-value" id="p75">--</span> draws
+                    </div>
+                    <div class="percentile-item">
+                        <span class="percentile-label">90% of games win by:</span>
+                        <span class="percentile-value" id="p90">--</span> draws
+                    </div>
+                </div>
+            </section>
+
+            <!-- Raw Data Table -->
+            <section class="admin-panel data-panel">
+                <h2>📝 Recent Simulation Data (Last 100)</h2>
+                <div class="data-table-container">
+                    <table class="data-table" id="dataTable">
+                        <thead>
+                            <tr>
+                                <th>Game #</th>
+                                <th>Draws to Win</th>
+                                <th>Winning Board</th>
+                                <th>Win Type</th>
+                            </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                            <tr><td colspan="4" class="no-data">No simulation data yet</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="admin-footer">
+            <p>Bingo Simulation Tool - For odds analysis and data collection</p>
+        </footer>
+    </div>
+
+    <script src="js/simulator.js"></script>
+</body>
+</html>
+
