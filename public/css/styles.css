@@ -74,7 +74,7 @@ body {
 .boards-container {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     gap: 30px;
     flex-wrap: wrap;
 }
@@ -189,19 +189,23 @@ body {
     100% { transform: scale(1); box-shadow: none; }
 }
 
-/* Winner banner (above the bordered board, not over the grid) */
+/* Winner banner: absolutely positioned so it does not shift the board vs other boards */
 .bingo-board-wrap {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.65rem;
+    position: relative;
+    display: inline-block;
     vertical-align: top;
 }
 
 .winner-banner-above {
-    flex-shrink: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 100%;
     width: 100%;
+    margin-bottom: 0.65rem;
     text-align: center;
+    pointer-events: none;
+    z-index: 10;
     animation: overlayFadeIn 0.5s ease;
 }
 
