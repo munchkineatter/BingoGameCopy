@@ -66,15 +66,18 @@ body {
     flex: 1;
     display: grid;
     grid-template-columns: 1fr auto;
+    grid-template-rows: minmax(0, 1fr);
     gap: 20px;
     min-height: 0;
+    align-items: center;
 }
 
 /* Boards Container */
 .boards-container {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: center;
+    align-content: center;
     gap: 30px;
     flex-wrap: wrap;
 }
@@ -1080,6 +1083,9 @@ body {
 @media (max-width: 900px) {
     .display-main {
         grid-template-columns: 1fr;
+        grid-template-rows: auto auto;
+        align-content: center;
+        justify-items: center;
     }
     
     .called-numbers-section {
